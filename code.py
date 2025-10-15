@@ -31,43 +31,60 @@ print(country_counts.head())
 
 #data vizulization
 # Set style
-sns.set(style="whitegrid", palette="muted")
+# sns.set(style="whitegrid", palette="muted")
 
-plt.figure(figsize=(6,4))
-sns.countplot(data=df, x='type')
-plt.title("Distribution of Movies vs TV Shows")
-plt.xlabel("Type")
-plt.ylabel("Count")
+# plt.figure(figsize=(6,4))
+# sns.countplot(data=df, x='type')
+# plt.title("Distribution of Movies vs TV Shows")
+# plt.xlabel("Type")
+# plt.ylabel("Count")
+# plt.show()
+
+
+# top_countries = df['country'].value_counts().head(10)
+# plt.figure(figsize=(8,5))
+# sns.barplot(x=top_countries.values, y=top_countries.index)
+# plt.title("Top 10 Countries with Most Netflix Titles")
+# plt.xlabel("Number of Titles")
+# plt.ylabel("Country")
+# plt.show()
+
+
+# titles_by_year = df['year_added'].value_counts().sort_index()
+# plt.figure(figsize=(10,5))
+# sns.lineplot(x=titles_by_year.index, y=titles_by_year.values)
+# plt.title("Trend of Content Added Over the Years")
+# plt.xlabel("Year Added")
+# plt.ylabel("Number of Titles")
+# plt.show()
+
+
+# top_genres = df['main_genre'].value_counts().head(10)
+# plt.figure(figsize=(8,5))
+# sns.barplot(x=top_genres.values, y=top_genres.index)
+# plt.title("Top 10 Main Genres on Netflix")
+# plt.xlabel("Number of Titles")
+# plt.ylabel("Genre")
+# plt.show()
+
+
+#assuming each season have 2 episods with 30min duration then each season has 60min
+def convert_duration(value):
+    value=value.lower()
+    if 'season' in value:
+        season_num = int(value.split()[0]) 
+        return season_num * 60
+    elif 'min' in value:
+        return int(value.replace(' min', ''))  
+    else:
+        return np.nan
+df['duration_int'] = df['duration'].apply(convert_duration)
+sns.boxplot(data=df,x='type',y='duration_int')
+plt.title("Duration of Tv shows vs Movies")
+plt.xlabel('type')
+plt.ylabel('durations')
 plt.show()
 
+sns.heatmap(data=df.corr(),annot=True,cmap="Blues",vmin=-0.2,linewidth=2,linecolor="black")
 
-top_countries = df['country'].value_counts().head(10)
-plt.figure(figsize=(8,5))
-sns.barplot(x=top_countries.values, y=top_countries.index)
-plt.title("Top 10 Countries with Most Netflix Titles")
-plt.xlabel("Number of Titles")
-plt.ylabel("Country")
-plt.show()
-
-
-titles_by_year = df['year_added'].value_counts().sort_index()
-plt.figure(figsize=(10,5))
-sns.lineplot(x=titles_by_year.index, y=titles_by_year.values)
-plt.title("Trend of Content Added Over the Years")
-plt.xlabel("Year Added")
-plt.ylabel("Number of Titles")
-plt.show()
-
-
-top_genres = df['main_genre'].value_counts().head(10)
-plt.figure(figsize=(8,5))
-sns.barplot(x=top_genres.values, y=top_genres.index)
-plt.title("Top 10 Main Genres on Netflix")
-plt.xlabel("Number of Titles")
-plt.ylabel("Genre")
-plt.show()
-
-
-plt.tight_layout()
-plt.show()
  # type: ignore
